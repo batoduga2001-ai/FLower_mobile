@@ -16,7 +16,7 @@ st.write("Upload an image and the model will predict the flower type.")
 # ======================
 @st.cache_resource
 def load_my_model():
-    model = load_model("flower_mobilenet.keras")  # make sure file exists in repo
+    model = load_model("flower_model.keras")  # make sure file exists in repo
     return model
 
 model = load_my_model()
