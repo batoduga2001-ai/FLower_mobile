@@ -16,7 +16,7 @@ st.write("Upload an image and the model will predict the flower type.")
 # -------------------------
 @st.cache_resource
 def load_my_model():
-    model = tf.keras.models.load_model("flower_mobile.keras")
+    model = tf.keras.models.load_model("flower_model.keras")
     return model
 
 model = load_my_model()
