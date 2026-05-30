@@ -1,5 +1,5 @@
-streamlit==1.58.0
-flask
-numpy==1.24.3
+streamlit
+numpy
 pillow
+keras
 tensorflow-cpu==2.13.0
