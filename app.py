@@ -1,25 +1,37 @@
-import streamlit as st
+from flask import Flask, request, render_template
 import numpy as np
-import tensorflow as tf
+from tensorflow.keras.models import load_model
 from PIL import Image
 
-model = tf.keras.models.load_model("flower_resnet50.keras")
+app = Flask(__name__)
+
+# Load model
+model = load_model("model.keras")
 
 class_names = ['daisy', 'dandelion', 'rose', 'sunflower', 'tulip']
 
-st.title("🌸 Flower Classifier")
 
-uploaded_file = st.file_uploader("Upload Image")
-
-if uploaded_file:
-    image = Image.open(uploaded_file)
-    st.image(image)
-
-    img = image.resize((224, 224))
+def preprocess_image(image):
+    img = Image.open(image).resize((224, 224))
     img = np.array(img) / 255.0
     img = np.expand_dims(img, axis=0)
+    return img
 
-    prediction = model.predict(img)
-    label = class_names[np.argmax(prediction)]
 
-    st.success(f"Prediction: {label}")
+@app.route("/", methods=["GET", "POST"])
+def index():
+    prediction = None
+
+    if request.method == "POST":
+        file = request.files["image"]
+        img = preprocess_image(file)
+
+        pred = model.predict(img)
+        class_index = np.argmax(pred)
+        prediction = class_names[class_index]
+
+    return render_template("index.html", prediction=prediction)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
